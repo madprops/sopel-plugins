@@ -66,17 +66,18 @@ def on_match(bot, trigger, word):
   points = json.load(fpoints)
   fpoints.close()
   fpoints = open(p / Path("wordmash_points.json"), "w")
-  if trigger.nick in points:
-    pts = points[trigger.nick] + 1
+  nick = str(trigger.nick)
+  if nick in points:
+    pts = points[nick] + 1
   else:
     pts = 1
-  points[trigger.nick] = pts
+  points[nick] = pts
   obj = json.dumps(points)
   fpoints.write(obj)
   fpoints.close()
 
   definition = get_word_definition(word)
-  ns = blue_text(trigger.nick)
+  ns = blue_text(nick)
   np = yellow_text(pts)
   dw = green_text(word)
   df = green_text(definition + ".")
@@ -121,14 +122,15 @@ def wordmash(bot, trigger):
 
     if trigger.group(2):
       word = trigger.group(2).strip().lower()
+      nick = str(trigger.nick)
       
       if word == "!stop":
         stop_mash(bot, current_words[0])
       elif len(word) != len(current_words[0]):
-        ns = blue_text(trigger.nick)
+        ns = blue_text(nick)
         bot.say(f"There's an incorrect number of letters in your guess, {ns}! Try again.")
       elif sort_string(word) != sort_string(current_words[0]):
-        ns = blue_text(trigger.nick)
+        ns = blue_text(nick)
         bot.say(f"You're not using the letters from the mash, {ns}! Try again.")
       else:
         for w in current_words:
