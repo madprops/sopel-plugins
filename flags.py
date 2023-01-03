@@ -2,16 +2,6 @@ import json
 import random
 from pathlib import Path
 from sopel import plugin
-from sopel import formatting
-
-def green_text(s):
-  return formatting.color(str(s), formatting.colors.GREEN)
-
-def blue_text(s):
-  return formatting.color(str(s), formatting.colors.BLUE)  
-
-def yellow_text(s):
-  return formatting.color(str(s), formatting.colors.YELLOW)  
 
 # Show the hint and flag image
 def show_message(bot, trigger):
@@ -46,7 +36,7 @@ def new_country(bot, trigger):
     s = country["Area KM2"] or "unknown"
     hint = f"The area (km2) of this country is {s}"
   elif hint_number == 5:
-    s = country["continent"] or "unknown"
+    s = country["Continent"] or "unknown"
     hint = f"The continent of this country is {s}"
   
   c = country["ISO2"].lower()
@@ -62,20 +52,21 @@ def new_country(bot, trigger):
   show_message(bot, trigger)  
 
 @plugin.command("flag")
-def flags(bot, trigger):
+def show_flag(bot, trigger):
+  show_message(bot, trigger)
+
+@plugin.rule(".*")
+def guess_flag(bot, trigger):
   # If country selected try to guess or print message
   name = bot.db.get_channel_value(trigger.sender, "flags_name")
 
   if name:
     # If argument then try to guess
-    if trigger.group(2):
-      guess = trigger.group(2).strip().lower()
+    line = trigger.group()
+    if line:
+      guess = line.strip().lower()
       if name.lower() == guess:
         bot.say("Correct!")
         new_country(bot, trigger)
-    else:
-      # Show message again
-      show_message(bot, trigger)
-    return
-
-  new_country(bot, trigger)
+  else:
+    new_country(bot, trigger)
