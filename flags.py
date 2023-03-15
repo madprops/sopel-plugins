@@ -88,7 +88,7 @@ def guess_country(bot, trigger):
     if line:
       guess = line.strip().lower()
       if name.lower() in guess:
-        c = green_text("Correct!")
+        c = green_text(f"{name} is correct!")
         bot.say(c)
         new_country(bot, trigger)
   else:
