@@ -47,7 +47,7 @@ def show_hint(bot, trigger):
   scode = green_text(code)
   s += f"  ( {scode} ) "
 
-  bot.say(f"Hint: {s}")   
+  bot.say(f"Hint:  {s}")   
 
 # Select a new country
 def new_country(bot, trigger):
