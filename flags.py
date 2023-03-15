@@ -32,7 +32,7 @@ def show_hint(bot, trigger):
   i = 1
 
   for letter in letters:
-    if i == 1 or i == len(letters):
+    if i == 1:
       s += green_text(letter)
     elif i == len(letters):
       s += " "
@@ -45,7 +45,7 @@ def show_hint(bot, trigger):
     i += 1
   
   scode = green_text(code)
-  s += f"  ({scode}) "
+  s += f"  ( {scode} ) "
 
   bot.say(f"Hint: {s}")   
 
