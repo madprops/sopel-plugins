@@ -23,6 +23,26 @@ def show_answer(bot, trigger):
   name = bot.db.get_channel_value(trigger.sender, "flags_name")
   bot.say(f"The answer was: {name}")  
 
+# Show a hint
+def show_hint(bot, trigger):
+  name = bot.db.get_channel_value(trigger.sender, "flags_name")
+  code = bot.db.get_channel_value(trigger.sender, "flags_code")
+  letters = list(name)
+  s = ""
+  i = 1
+
+  for letter in letters:
+    if i == 1 or i == len(letters):
+      s += green_text(letter)
+    else:
+      s += " _ "
+
+    i += 1
+  
+  s += green_text(f" ({code}) ")
+
+  bot.say(f"Hint: {s}")   
+
 # Select a new country
 def new_country(bot, trigger):
   # Load country info json (big)
@@ -63,6 +83,7 @@ def new_country(bot, trigger):
   
   # Save current country code in db
   bot.db.set_channel_value(trigger.sender, "flags_name", country["Country Name"])
+  bot.db.set_channel_value(trigger.sender, "flags_code", country["ISO3"])
   bot.db.set_channel_value(trigger.sender, "flags_hint", hint)
 
   # Show the message
@@ -71,9 +92,12 @@ def new_country(bot, trigger):
 @plugin.command("country")
 def show_country(bot, trigger):
   if trigger.group(2):
-    if trigger.group(2).strip().lower() == "skip":
+    s = trigger.group(2).strip().lower()
+    if s == "skip":
       show_answer(bot, trigger)
       new_country(bot, trigger)
+    elif s == "hint":
+      show_hint(bot, trigger)
   else:
     show_message(bot, trigger)
 
@@ -86,9 +110,11 @@ def guess_country(bot, trigger):
     # If argument then try to guess
     line = trigger.group()
     if line:
-      guess = line.strip().lower()
-      if name.lower() in guess:
-        c = green_text(f"{name} is correct!")
+      guess = line.strip().lower().replace(".", "")
+
+      if name.lower().replace(".", "") in guess:
+        green_name = green_text(name)
+        c = f"{green_name} is correct!"
         bot.say(c)
         new_country(bot, trigger)
   else:
