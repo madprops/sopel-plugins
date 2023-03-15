@@ -34,12 +34,18 @@ def show_hint(bot, trigger):
   for letter in letters:
     if i == 1 or i == len(letters):
       s += green_text(letter)
+    elif i == len(letters):
+      s += " "
+      s += green_text(letter)
+    elif letter == " ":
+      s += "  "
     else:
-      s += " _ "
+      s += " _"
 
     i += 1
   
-  s += green_text(f" ({code}) ")
+  scode = green_text(code)
+  s += f"  ({scode}) "
 
   bot.say(f"Hint: {s}")   
 
