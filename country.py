@@ -15,18 +15,19 @@ def yellow_text(s):
 
 # Show the hint and flag image
 def show_message(bot, trigger):
-  hint = bot.db.get_channel_value(trigger.sender, "flags_hint")
+  hint = bot.db.get_channel_value(trigger.sender, "country_info")
   bot.say(f"Guess this country | {hint}")
 
 # Show the answer
 def show_answer(bot, trigger):
-  name = bot.db.get_channel_value(trigger.sender, "flags_name")
-  bot.say(f"The answer was: {name}")  
+  name = bot.db.get_channel_value(trigger.sender, "country_name")
+  green_country = green_text(name)
+  bot.say(f"The answer was:  {green_country}")  
 
 # Show a hint
 def show_hint(bot, trigger):
-  name = bot.db.get_channel_value(trigger.sender, "flags_name")
-  code = bot.db.get_channel_value(trigger.sender, "flags_code")
+  name = bot.db.get_channel_value(trigger.sender, "country_name")
+  code = bot.db.get_channel_value(trigger.sender, "country_code")
   letters = list(name)
   s = ""
   i = 1
@@ -88,9 +89,9 @@ def new_country(bot, trigger):
   hint = " | ".join(hints)
   
   # Save current country code in db
-  bot.db.set_channel_value(trigger.sender, "flags_name", country["Country Name"])
-  bot.db.set_channel_value(trigger.sender, "flags_code", country["ISO3"])
-  bot.db.set_channel_value(trigger.sender, "flags_hint", hint)
+  bot.db.set_channel_value(trigger.sender, "country_name", country["Country Name"])
+  bot.db.set_channel_value(trigger.sender, "country_code", country["ISO3"])
+  bot.db.set_channel_value(trigger.sender, "country_info", hint)
 
   # Show the message
   show_message(bot, trigger)  
@@ -110,7 +111,7 @@ def show_country(bot, trigger):
 @plugin.rule(".*")
 def guess_country(bot, trigger):
   # If country selected try to guess or print message
-  name = bot.db.get_channel_value(trigger.sender, "flags_name")
+  name = bot.db.get_channel_value(trigger.sender, "country_name")
 
   if name:
     # If argument then try to guess
