@@ -13,18 +13,15 @@ def blue_text(s):
 def yellow_text(s):
   return formatting.color(str(s), formatting.colors.YELLOW)  
 
-# Show the hint and flag image
-def show_message(bot, trigger):
+def show_info(bot, trigger):
   hint = bot.db.get_channel_value(trigger.sender, "country_info")
   bot.say(f"Guess this country | {hint}")
 
-# Show the answer
 def show_answer(bot, trigger):
   name = bot.db.get_channel_value(trigger.sender, "country_name")
   green_country = green_text(name)
   bot.say(f"The answer was:  {green_country}")  
 
-# Show a hint
 def show_hint(bot, trigger):
   name = bot.db.get_channel_value(trigger.sender, "country_name")
   code = bot.db.get_channel_value(trigger.sender, "country_code")
@@ -94,7 +91,7 @@ def new_country(bot, trigger):
   bot.db.set_channel_value(trigger.sender, "country_info", hint)
 
   # Show the message
-  show_message(bot, trigger)  
+  show_info(bot, trigger)  
 
 @plugin.command("country")
 def show_country(bot, trigger):
@@ -106,7 +103,7 @@ def show_country(bot, trigger):
     elif s == "hint":
       show_hint(bot, trigger)
   else:
-    show_message(bot, trigger)
+    show_info(bot, trigger)
 
 @plugin.rule(".*")
 def guess_country(bot, trigger):
